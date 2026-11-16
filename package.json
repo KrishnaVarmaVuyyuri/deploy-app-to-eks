@@ -1,0 +1,13 @@
+{
+  "name": "deploy-to-ec2-cicd",
+  "version": "1.0.0",
+  "description": "CI/CD deployment using GitHub Actions Docker and AWS EC2",
+  "main": "src/app.js",
+  "scripts": {
+    "start": "node src/app.js",
+    "test": "node --test"
+  },
+  "dependencies": {
+    "express": "^5.1.0"
+  }
+}
