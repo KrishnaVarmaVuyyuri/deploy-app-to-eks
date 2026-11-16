@@ -1,0 +1,50 @@
+name: "deploy node app to ec2 server through cicd"
+on: 
+  push: 
+    branches: ["main"]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build and push:
+    runs-on: ubuntu-latest
+
+    steps:  
+      - name: checkout the code from github
+        uses: actions/@checkout@v4
+
+      - name: setting up the node js environment
+        uses: actions/setup-node@v4
+        with: 
+          node-version: 22
+          cache: npm
+      - name: installing the dependencies
+        run: npm ci
+
+      - name: running the tests
+        run: npm test
+
+      - name: login to docker hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{secrets.DOCKERHUB_USERNAME}}
+          password: ${{secrets.DOCKERHUB_TOKEN}}
+
+      - name: generating docker image tags
+        id: meta
+        uses: docker/metadata-action@v5
+        with: 
+          images: ${{secrets.DOCKERHUB_USERNAME}}/deploy-to-ec2
+          tags: |
+            type=sha,format=long
+            type=raw,value=latest
+
+      - name: build and push docker image
+        uses: docker/build-push-action@v6
+        with:
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+         
+        
