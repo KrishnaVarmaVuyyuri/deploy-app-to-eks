@@ -57,10 +57,10 @@ jobs:
               echo "repo:${GITHUB_REPOSITORY}:ref:${GITHUB_REF}"
         
       - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v4
+        uses: aws-actions/configure-aws-credentials@v6
         with:
-          role-to-assume: ${{ variables.AWS_ROLE_ARN }}
-          aws-region: ${{ variables.AWS_REGION }}
+          role-to-assume: ${{ vars.AWS_ROLE_ARN }}
+          aws-region: ${{ vars.AWS_REGION }}
 
 
       - name: Verify AWS identity
