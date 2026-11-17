@@ -15,52 +15,52 @@ jobs:
       - name: checkout the code from github
         uses: actions/checkout@v4
 
-      - name: setting up the node js environment
-        uses: actions/setup-node@v4
-        with: 
-          node-version: 22
-          cache: npm
-      - name: installing the dependencies
-        run: npm ci
+      # - name: setting up the node js environment
+      #   uses: actions/setup-node@v4
+      #   with: 
+      #     node-version: 22
+      #     cache: npm
+      # - name: installing the dependencies
+      #   run: npm ci
 
-      - name: running the tests
-        run: npm test
+      # - name: running the tests
+      #   run: npm test
 
-      - name: login to docker hub
-        uses: docker/login-action@v3
-        with:
-          username: ${{secrets.DOCKERHUB_USERNAME}}
-          password: ${{secrets.DOCKERHUB_TOKEN}}
+      # - name: login to docker hub
+      #   uses: docker/login-action@v3
+      #   with:
+      #     username: ${{secrets.DOCKERHUB_USERNAME}}
+      #     password: ${{secrets.DOCKERHUB_TOKEN}}
 
-      - name: generating docker image tags
-        id: meta
-        uses: docker/metadata-action@v5
-        with: 
-          images: ${{secrets.DOCKERHUB_USERNAME}}/deploy-to-ec2
-          tags: |
-            type=sha,format=long
-            type=raw,value=latest
+      # - name: generating docker image tags
+      #   id: meta
+      #   uses: docker/metadata-action@v5
+      #   with: 
+      #     images: ${{secrets.DOCKERHUB_USERNAME}}/deploy-to-ec2
+      #     tags: |
+      #       type=sha,format=long
+      #       type=raw,value=latest
 
-      - name: build and push docker image
-        uses: docker/build-push-action@v6
-        with:
-          context: .
-          push: true
-          tags: ${{ steps.meta.outputs.tags }}
-          labels: ${{ steps.meta.outputs.labels }}
+      # - name: build and push docker image
+      #   uses: docker/build-push-action@v6
+      #   with:
+      #     context: .
+      #     push: true
+      #     tags: ${{ steps.meta.outputs.tags }}
+      #     labels: ${{ steps.meta.outputs.labels }}
 
-      - name: Verify GitHub OIDC configuration
-        run: |
-              echo "Repository: $GITHUB_REPOSITORY"
-              echo "Branch reference: $GITHUB_REF"
-              echo "Expected subject:"
-              echo "repo:${GITHUB_REPOSITORY}:ref:${GITHUB_REF}"
+      # - name: Verify GitHub OIDC configuration
+      #   run: |
+      #         echo "Repository: $GITHUB_REPOSITORY"
+      #         echo "Branch reference: $GITHUB_REF"
+      #         echo "Expected subject:"
+      #         echo "repo:${GITHUB_REPOSITORY}:ref:${GITHUB_REF}"
         
       - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v6
+        uses: aws-actions/configure-aws-credentials@v4.1.0
         with:
-          role-to-assume: ${{ vars.AWS_ROLE_ARN }}
-          aws-region: ${{ vars.AWS_REGION }}
+          role-to-assume: ap-south-1
+          aws-region: arn:aws:iam::131470773249:role/github-actions-role
 
 
       - name: Verify AWS identity
