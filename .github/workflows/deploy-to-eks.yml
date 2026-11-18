@@ -77,8 +77,8 @@ jobs:
       - name: Configure AWS Credentials using OIDC
         uses: aws-actions/configure-aws-credentials@v4
         with:
-          role-to-assume: ${{ ROLE_ARN }}
-          aws-region: ${{ REGION }}
+          role-to-assume: ${{ vars.ROLE_ARN }}
+          aws-region: ${{ vars.REGION }}
 
       - name: Configure kubectl
         run: |
